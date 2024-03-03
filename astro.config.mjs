@@ -6,7 +6,7 @@ import { remarkReadingTime } from './src/utils/readTime.ts'
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://solarliner.dev', // Write here your website url
+	site: 'https://solarliner.github.io', // Write here your website url
 	markdown: {
 		remarkPlugins: [remarkReadingTime],
 		drafts: true,
