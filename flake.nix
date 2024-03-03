@@ -2,7 +2,7 @@
   inputs = {
     # nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     systems.url = "github:nix-systems/default";
-    pnpm2nix.url = github:nzbr/pnpm2nix-nzbr;
+    pnpm2nix.url = "github:nzbr/pnpm2nix-nzbr";
   };
 
   outputs = { self, nixpkgs, flake-utils, systems, pnpm2nix, ... }:
@@ -16,8 +16,8 @@
             doCheck = true;
             phases = [ "checkPhase" ];
           });
-          inherit (pnpm2nix.packages.${system}) mkPnpmPackage;
-      in {
+        inherit (pnpm2nix.packages.${system}) mkPnpmPackage;
+      in rec {
         checks = {
           lint = mkCheck {
             name = "check-lint";
@@ -45,6 +45,13 @@
             src = ./.;
             installInPlace = true;
           };
+          server = pkgs.writeShellScript "server.sh" ''
+            ${pkgs.http-server}/bin/http-server ${packages.website}
+          '';
+        };
+        apps.default = {
+          type = "app";
+          program = "${packages.server}";
         };
       });
 }
