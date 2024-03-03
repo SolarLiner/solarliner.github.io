@@ -2,19 +2,21 @@
   inputs = {
     # nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     systems.url = "github:nix-systems/default";
+    pnpm2nix.url = github:nzbr/pnpm2nix-nzbr;
   };
 
-  outputs = { self, nixpkgs, flake-utils, systems, }:
+  outputs = { self, nixpkgs, flake-utils, systems, pnpm2nix, ... }:
     flake-utils.lib.eachSystem (import systems) (system:
       let
         pkgs = import nixpkgs { inherit system; };
         mkCheck = args:
           with pkgs;
-          stdenv.mkDerivation (args // {
+          stdenvNoCC.mkDerivation (args // {
             src = ./.;
             doCheck = true;
             phases = [ "checkPhase" ];
           });
+          inherit (pnpm2nix.packages.${system}) mkPnpmPackage;
       in {
         checks = {
           lint = mkCheck {
@@ -34,6 +36,15 @@
           shellHook = ''
             pnpm install
           '';
+        };
+        packages = rec {
+          default = website;
+          website = mkPnpmPackage {
+            pname = "solarliner.dev";
+            version = self.rev or "dirty";
+            src = ./.;
+            installInPlace = true;
+          };
         };
       });
 }
