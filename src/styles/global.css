@@ -7,8 +7,13 @@
 		transition: background-color 0.5s ease;
 	} */
 
+	.prose {
+		text-align: justify;
+	}
+
 	.prose code {
 		@apply text-base;
+		text-align: initial !important;
 	}
 
 	/* prose styles here */
