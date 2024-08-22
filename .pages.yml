@@ -31,4 +31,9 @@ content:
     label: Tags
     type: string
     list: true
+    required: true
+  - name: body
+    label: Body
+    type: rich-text
+    required: true
   
