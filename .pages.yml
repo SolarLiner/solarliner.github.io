@@ -36,4 +36,8 @@ content:
     label: Body
     type: rich-text
     required: true
+    options:
+      image:
+        path: src/assets/images
+        extensions: [jpg, jpeg, png]
   
